@@ -69,7 +69,7 @@ class IExaminationTest {
         Set<String> expected = new HashSet<>(Arrays.asList("Иванов Иван", "Сидоров Сидор", "Смирнов Сергей",
                 "Козлов Козла", "Лебедева Лариса"));
 
-        Assertions.assertEquals(expected, result); // Проверяем, что возвращаемое множество студентов совпадает с ожидаемым
+        Assertions.assertEquals(expected, result);
     }
 
     @Test

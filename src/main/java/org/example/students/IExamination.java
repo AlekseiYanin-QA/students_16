@@ -7,25 +7,26 @@ import java.util.stream.Collectors;
 
 public class IExamination implements Examination{
 
-    private final Map<String, List<Record>> records = new HashMap<>();
+    private final Map<String, List<Record>> records =new LinkedHashMap<>();
 
+    // Добавляем запись в список
     @Override
     public void addRecord(Record score) {
-        records.computeIfAbsent(score.name(), k -> new ArrayList<>()).add(score); // Добавляем запись в список
+        records.computeIfAbsent(score.name(), k -> new ArrayList<>()).add(score);
     }
 
+    // Возвращаем получаем запись
     @Override
     public Record getRecord(String name) throws RecordNotFoundException {
         List<Record> studentRecords = records.get(name);
         if (studentRecords == null || studentRecords.isEmpty()) {
             throw new RecordNotFoundException(name);
         }
-        return studentRecords.get(studentRecords.size() - 1); // Возвращаем последнюю запись
+        return studentRecords.get(studentRecords.size() - 1);
     }
-
+    // Возвращаем среднее значение по предмету
     @Override
     public double getAverageForSubject(String subject) {
-        // Используем flatMap для "разворачивания" списков в одну стрим последовательность
         List<Record> filteredRecords = records.values().stream()
                 .flatMap(List::stream) // Разворачиваем списки записей в одну последовательность
                 .filter(record -> record.subject().equals(subject)) // Фильтруем по предмету
@@ -42,6 +43,7 @@ public class IExamination implements Examination{
         return sum / filteredRecords.size(); // Возвращаем среднее значение
     }
 
+    // Возвращаем список имен студентов, имеющих более одной оценки
     @Override
     public Set<String> multipleSubmissionsStudentNames() {
         Set<String> set = new HashSet<>();
@@ -53,7 +55,7 @@ public class IExamination implements Examination{
         }
         return set;
     }
-
+    // Получаем пять студентов ставших оценку на 5
     @Override
     public Set<String> lastFiveStudentsWithExcellentMarkOnAnySubject() {
         return records.values().stream()
@@ -65,6 +67,7 @@ public class IExamination implements Examination{
                 .collect(Collectors.toSet()); // Собираем в множество
     }
 
+    // Возвращаем все результаты
     @Override
     public Collection<Record> getAllScores() {
         List<Record> allRecords = new ArrayList<>();
